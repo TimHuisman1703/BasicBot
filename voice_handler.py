@@ -2,7 +2,9 @@ import os
 
 import discord
 
-SOUNDS_DIR = "data/sounds/"
+DIRECTORY = "/".join(os.path.abspath(__file__).split("\\")[:-1])
+DIRECTORY = "/".join(str(__file__).split("\\")[:-1])
+SOUNDS_DIR = DIRECTORY + "/data/sounds/"
 SOUND_NAMES = []
 SOUNDS = {}
 

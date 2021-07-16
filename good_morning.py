@@ -3,8 +3,9 @@ from datetime import datetime
 
 import discord
 
-FILE_LAST_SENT = "data/database/gm_last_sent.txt"
-FILE_DAILY_CHANNEL = "data/database/gm_daily_channel.txt"
+DIRECTORY = "/".join(os.path.abspath(__file__).split("\\")[:-1])
+FILE_LAST_SENT = DIRECTORY + "/data/database/gm_last_sent.txt"
+FILE_DAILY_CHANNEL = DIRECTORY + "/data/database/gm_daily_channel.txt"
 
 last_sent = {}
 daily_channel = {}

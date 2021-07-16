@@ -1,7 +1,10 @@
+import os
+
 import random
 import codecs
 
-FILE_SAMPLE = "data/sample_texts/sg_sample_personal.txt"
+DIRECTORY = "/".join(os.path.abspath(__file__).split("\\")[:-1])
+FILE_SAMPLE = DIRECTORY + "/data/sample_texts/sg_sample_personal.txt"
 
 REPLACED_CHARS = [
 	("\\r", ""),

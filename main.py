@@ -21,8 +21,9 @@ PREFIX = [
 
 client = discord.Client(intents=discord.Intents.all())
 
-if not os.path.exists("data/database"):
-	os.mkdir("data/database")
+DIRECTORY = "/".join(os.path.abspath(__file__).split("\\")[:-1])
+if not os.path.exists(DIRECTORY + "/data/database"):
+	os.mkdir(DIRECTORY + "/data/database")
 
 @client.event
 async def on_ready():
