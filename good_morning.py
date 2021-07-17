@@ -202,17 +202,29 @@ class GoodMorning:
 
 	async def send_help_message(channel):
 		strings = [
-			"# Good Morning",
+			"= Good Morning =",
 			"",
-			"* %gm                       <Offers an instant good morning.>",
-			"* %gm join                  <Sends the user a good morning everyday.>",
-			"* %gm leave                 <Stops sending the user a daily good morning.>",
-			"* %gm here                  <Selects the current channel for daily messages.>",
-			"* %gm nowhere               <Disables daily messages.>",
-			"* %gm to [name]             <Wishes someone a good morning.>"
+			"* %gm",
+			"Offers an instant good morning.",
+			"",
+			"* %gm join",
+			"Sends the user a good morning everyday.",
+			"",
+			"* %gm leave",
+			"Stops sending the user a daily good morning.",
+			"",
+			"* %gm here",
+			"Selects the current channel for daily messages."
+			"",
+			"* %gm nowhere",
+			"Disables daily messages.",
+			"",
+			"* %gm to [name]",
+			"Wishes someone a good morning.",
+			"name :: The person to wish a good morning to."
 		]
 
-		await channel.send("```md\n" + "\n".join(strings) + "```")
+		await channel.send("```asciidoc\n" + "\n".join(strings) + "```")
 
 if __name__ == "__main__":
 	print("You did it again, dummy!")

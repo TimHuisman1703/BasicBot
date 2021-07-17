@@ -103,15 +103,24 @@ async def send_help_message(channel):
 		"#   BasicBot   #",
 		"#==============#",
 		"",
-		"[Minesweeper][1]            <Generates a game of Minesweeper.>",
+		"[Minesweeper][1]",
+		"<Generates a game of Minesweeper.>",
 		"* %ms help",
-		"[Good Morning][2]           <Wishes you a good morning.>",
+		"",
+		"[Good Morning][2]",
+		"<Wishes you a good morning.>",
 		"* %gm help",
-		"[Emoji Manager][3]          <Manages emojis.>",
+		"",
+		"[Emoji Manager][3]",
+		"<Manages emojis.>",
 		"* %em help",
-		"[Sentence Generator][4]     <Generates a random sentence.>",
+		"",
+		"[Sentence Generator][4]",
+		"<Generates a random sentence.>",
 		"* %sg help",
-		"[Voice Channel][5]          <Handles Voice Channel interactions.>",
+		"",
+		"[Voice Channel][5]",
+		"<Handles Voice Channel interactions.>",
 		"* %vc help",
 	]
 
@@ -121,5 +130,6 @@ busy = set()
 
 GoodMorning.startup(client)
 EmojiManager.startup(client)
+SentenceGenerator.startup(client)
 
 client.run(TOKEN)

@@ -93,15 +93,16 @@ class Minesweeper:
 	
 	async def send_help_message(channel):
 		strings = [
-			"# Minesweeper",
+			"= Minesweeper =",
 			"",
-			"* %ms                       <Creates a default field (10x10 with 15 bombs).>",
-			"* %ms 5x5                   <Creates a 5x5 field.>",
-			"* %ms 1:5                   <Creates a field with a 1 to 5 bomb ratio.>",
-			"* %ms 20x20 2:15            <Creates a 20x20 field with a 2 to 15 bomb ratio.>",
+			"* %ms <[w]x[h]> <[a:b]>",
+			"Creates a field of a certain size and with a certain bomb ratio.",
+			"w :: The width of the field.",
+			"h :: The height of the field.",
+			"a:b :: The ratio of bombs to tiles (0 <= a <= b, 0 < b)."
 		]
 
-		await channel.send("```md\n" + "\n".join(strings) + "```")
+		await channel.send("```asciidoc\n" + "\n".join(strings) + "```")
 
 if __name__ == "__main__":
 	print("You did it again, dummy!")

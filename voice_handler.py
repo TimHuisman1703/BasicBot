@@ -115,16 +115,26 @@ class VoiceHandler:
 	
 	async def send_help_message(channel):
 		strings = [
-			"# Voice Channel",
+			"= Voice Channel =",
 			"",
-			"* %vc join                  <Joins the user in a voice channel.>",
-			"* %vc leave                 <Leaves the voice channel.>",
-			"* %vc play [name]           <Plays a sound effect.>",
-			"* %vc stop                  <Stops talking.>",
-			"* %vc list                  <Shows all available sound effects.>",
+			"* %vc join",
+			"Joins the user in a voice channel.",
+			"",
+			"* %vc leave",
+			"Leaves the voice channel.",
+			"",
+			"* %vc play [name]",
+			"Plays a sound effect.",
+			"name :: The name of the sound effect (can be found in the list).",
+			"",
+			"* %vc stop",
+			"Stops talking.",
+			"",
+			"* %vc list",
+			"Shows all available sound effects."
 		]
 
-		await channel.send("```md\n" + "\n".join(strings) + "```")
+		await channel.send("```asciidoc\n" + "\n".join(strings) + "```")
 
 if __name__ == "__main__":
 	print("You did it again, dummy!")

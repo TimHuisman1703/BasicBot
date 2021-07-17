@@ -18,8 +18,6 @@ class EmojiManager:
 
 		EmojiManager.client = client
 
-		global temp_emojis
-
 	async def process(message):
 		args = message.content.split()[1:]
 
@@ -191,14 +189,50 @@ class EmojiManager:
 	
 	async def send_help_message(channel):
 		strings = [
-			"# Emoji Manager",
+			"= DM Handler =",
 			"",
-			"* %em add [name] {image}    <Creates a new emoji.>",
-			"* %em temp [name] {image}   <Creates a new temporary emoji.>",
-			"* %em remove [name]         <Removes an emoji.>",
+			"* send [uid] [text]",
+			"Sends a message to a user in DM.",
+			"[uid] :: The ID of the user to DM.",
+			"[text] :: The text to send.",
+			"",
+			"* send c[cid] [text]",
+			"Sends a message to a channel.",
+			"[cid] :: The ID of the channel to send to.",
+			"[text] :: The text to send.",
+			"",
+			"* react [cid] [mid] [ename]",
+			"Reacts to a message with an emoji.",
+			"cid :: The ID of the channel the message is in.",
+			"mid :: The ID of the message to react to.",
+			"ename :: The name (or unicode character) of the emoji to react with.",
+			"",
+			"* unreact [cid] [mid] [ename]   <Removes a reaction from a message.>",
+			"Removes a reaction from a message.",
+			"cid :: The ID of the channel the message is in.",
+			"mid :: The ID of the message to react to.",
+			"ename :: The name (or unicode character) of the emoji to react with.",
 		]
 
-		await channel.send("```md\n" + "\n".join(strings) + "```")
+		strings = [
+			"= Emoji Manager =",
+			"",
+			"* %em add [name] {image}",
+			"Creates a new emoji.",
+			"name :: The name of the emoji.",
+			"image :: Attachment: The image to make an emoji from.",
+			"",
+			"* %em temp [name] {image}",
+			"Creates a new temporary emoji (deleted in 24 hours).",
+			"name :: The name of the emoji.",
+			"image :: Attachment: The image to make an emoji from.",
+			"",
+			"* %em remove [name]",
+			"Removes an emoji.",
+			"name :: The name of the emoji."
+		]
+
+		await channel.send("```asciidoc\n" + "\n".join(strings) + "```")
 
 if __name__ == "__main__":
 	print("You did it again, dummy!")

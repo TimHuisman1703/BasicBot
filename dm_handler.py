@@ -80,17 +80,34 @@ class DMHandler:
 				except:
 					pass
 	
-	async def send_help_message(channel):
+	async def send_help_message(channel):	
 		strings = [
-			"# DM Handler",
+			"= DM Handler =",
 			"",
-			"* send [uid] [text]             <Sends a message to a user in DM.>",
-			"* send c[cid] [text]            <Sends a message to a channel.>",
-			"* react [cid] [mid] [ename]     <Reacts to a message with an emoji.>",
+			"* send [uid] [text]",
+			"Sends a message to a user in DM.",
+			"[uid] :: The ID of the user to DM.",
+			"[text] :: The text to send.",
+			"",
+			"* send c[cid] [text]",
+			"Sends a message to a channel.",
+			"[cid] :: The ID of the channel to send to.",
+			"[text] :: The text to send.",
+			"",
+			"* react [cid] [mid] [ename]",
+			"Reacts to a message with an emoji.",
+			"cid :: The ID of the channel the message is in.",
+			"mid :: The ID of the message to react to.",
+			"ename :: The name (or unicode character) of the emoji to react with.",
+			"",
 			"* unreact [cid] [mid] [ename]   <Removes a reaction from a message.>",
+			"Removes a reaction from a message.",
+			"cid :: The ID of the channel the message is in.",
+			"mid :: The ID of the message to react to.",
+			"ename :: The name (or unicode character) of the emoji to react with.",
 		]
 
-		await channel.send("```md\n" + "\n".join(strings) + "```")
+		await channel.send("```asciidoc\n" + "\n".join(strings) + "```")
 
 if __name__ == "__main__":
 	print("You did it again, dummy!")
