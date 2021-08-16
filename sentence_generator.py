@@ -142,7 +142,7 @@ class SentenceGenerator:
 		
 		return True
 	
-	async def wiki_scrape(topic: str, file: TextIOWrapper, depth: int = 0, width: int = 4):
+	async def wiki_scrape(topic: str, file: TextIOWrapper, depth: int = 0, width: int = 0):
 		r = requests.get(f"https://en.wikipedia.org/wiki/{topic}")
 		if r.status_code != 200:
 			return
@@ -193,7 +193,7 @@ class SentenceGenerator:
 				
 				print(f"Reading: https://en.wikipedia.org/wiki/{child} (from \"{topic}\")")
 				
-				SentenceGenerator.wiki_scrape(child, file, depth-1, width)
+				await SentenceGenerator.wiki_scrape(child, file, depth-1, width)
 	
 	async def generate_text_from_wiki(message):
 		args = message.content.split()[1:]
@@ -205,8 +205,11 @@ class SentenceGenerator:
 		try:
 			if len(args) > 1:
 				depth = int(args[1])
-			if len(args) > 2:
-				width = int(args[2])
+
+				if len(args) > 2:
+					width = int(args[2])
+				else:
+					width = MAX_ARTICLES - 1
 		except:
 			pass
 		

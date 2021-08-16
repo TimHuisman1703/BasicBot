@@ -6,16 +6,21 @@ import discord
 DIRECTORY = "/".join(os.path.abspath(__file__).split("\\")[:-1])
 FILE_LAST_SENT = DIRECTORY + "/data/database/gm_last_sent.txt"
 FILE_DAILY_CHANNEL = DIRECTORY + "/data/database/gm_daily_channel.txt"
+FILE_USER_PHRASE = DIRECTORY + "/data/database/gm_user_phrase.txt"
+
+STANDARD_PHRASE = "Good morning, <NAME>!"
 
 last_sent = {}
 daily_channel = {}
+user_phrase = {}
 
 class GoodMorning:
 	def startup(client):
 		GoodMorning.client = client
 
-		GoodMorning.read_file_daily_channel()
 		GoodMorning.read_file_last_sent()
+		GoodMorning.read_file_daily_channel()
+		GoodMorning.read_file_user_phrase()
 
 	async def check_good_morning(search_guild=None):
 		global last_sent
@@ -50,7 +55,7 @@ class GoodMorning:
 					if user.status != discord.Status.online:
 						continue
 
-					await GoodMorning.create_message(channel, user.display_name)
+					await GoodMorning.create_message(channel, guild, user)
 
 					last_sent.update({key: today})
 		
@@ -62,8 +67,9 @@ class GoodMorning:
 		channel = message.channel
 
 		if len(args) == 0:
-			user = message.author.display_name
-			await GoodMorning.create_message(channel, user)
+			guild = message.guild
+			user = message.author
+			await GoodMorning.create_message(channel, guild, user)
 			return
 		
 		if args[0].lower() in ["help", "?"]:
@@ -78,6 +84,10 @@ class GoodMorning:
 			await GoodMorning.leave_user(message)
 			return
 
+		if args[0].lower() in ["phrase"]:
+			await GoodMorning.update_phrase(message)
+			return
+
 		if args[0].lower() in ["here"]:
 			await GoodMorning.set_channel(message)
 			return
@@ -88,7 +98,7 @@ class GoodMorning:
 
 		if args[0].lower() in ["to"]:
 			user = " ".join(args[1:])
-			await GoodMorning.create_message(channel, user)
+			await GoodMorning.send_message(channel, STANDARD_PHRASE, user)
 			return
 
 	async def join_user(message):
@@ -117,6 +127,18 @@ class GoodMorning:
 			await message.channel.send("You are currently not receiving daily good mornings.")
 
 		await GoodMorning.write_file_last_sent()
+	
+	async def update_phrase(message):
+		key = f"{message.guild.id}-{message.author.id}"
+		phrase = " ".join(message.content.split()[2:])
+
+		user_phrase.update({key: phrase})
+
+		await message.channel.send(f"From now on I'll greet you with \"{phrase.replace('<NAME>', message.author.display_name)}\"")
+
+		print(f"{message.author} in {message.guild} updated phrase to \"{phrase}\"")
+
+		await GoodMorning.write_file_user_phrase()
 
 	async def set_channel(message):
 		print(f"Channel in {message.guild} set to {message.channel}")
@@ -139,37 +161,17 @@ class GoodMorning:
 
 		await GoodMorning.write_file_daily_channel()
 
-	async def create_message(channel, user):
-		await channel.send(f"Good morning, {user}!")
+	async def create_message(channel, guild, user):
+		key = f"{guild.id}-{user.id}"
 
-	def read_file_daily_channel():
-		global daily_channel
-
-		try:
-			with open(FILE_DAILY_CHANNEL, 'r') as f:
-				strings = f.read().split("\n")
-
-				for string in strings:
-					key, value = string.split()
-					daily_channel.update({key: value})
-
-				f.close()
-		except:
-			pass
-
-	async def write_file_daily_channel():
-		global daily_channel
-
-		try:
-			os.remove(FILE_DAILY_CHANNEL)
-		except:
-			pass
-
-		with open(FILE_DAILY_CHANNEL, 'w') as f:
-			strings = [f"{key} {value}" for key, value in daily_channel.items()]
-
-			f.write("\n".join(strings))
-			f.close()
+		phrase = STANDARD_PHRASE
+		if key in user_phrase:
+			phrase = user_phrase[key]
+		
+		await GoodMorning.send_message(channel, phrase, user.display_name)
+		
+	async def send_message(channel, phrase, username):
+		await channel.send(phrase.replace("<NAME>", username))
 
 	def read_file_last_sent():
 		global last_sent
@@ -200,6 +202,64 @@ class GoodMorning:
 			f.write("\n".join(strings))
 			f.close()
 
+	def read_file_daily_channel():
+		global daily_channel
+
+		try:
+			with open(FILE_DAILY_CHANNEL, 'r') as f:
+				strings = f.read().split("\n")
+
+				for string in strings:
+					key, value = string.split()
+					daily_channel.update({key: value})
+
+				f.close()
+		except:
+			pass
+
+	async def write_file_daily_channel():
+		global daily_channel
+
+		try:
+			os.remove(FILE_DAILY_CHANNEL)
+		except:
+			pass
+
+		with open(FILE_DAILY_CHANNEL, 'w') as f:
+			strings = [f"{key} {value}" for key, value in daily_channel.items()]
+
+			f.write("\n".join(strings))
+			f.close()
+
+	def read_file_user_phrase():
+		global user_phrase
+
+		try:
+			with open(FILE_USER_PHRASE, 'r') as f:
+				strings = f.read().split("\n")
+
+				for string in strings:
+					args = string.split()
+					user_phrase.update({args[0]: " ".join(args[1:])})
+
+				f.close()
+		except:
+			pass
+
+	async def write_file_user_phrase():
+		global user_phrase
+
+		try:
+			os.remove(FILE_USER_PHRASE)
+		except:
+			pass
+
+		with open(FILE_USER_PHRASE, 'w') as f:
+			strings = [f"{key} {value}" for key, value in user_phrase.items()]
+
+			f.write("\n".join(strings))
+			f.close()
+
 	async def send_help_message(channel):
 		strings = [
 			"= Good Morning =",
@@ -213,8 +273,12 @@ class GoodMorning:
 			"* %gm leave",
 			"Stops sending the user a daily good morning.",
 			"",
+			"* %gm phrase [phrase]",
+			"Changes the good morning phrase of the user.",
+			"phrase :: The phrase to say. \"<NAME>\" will be replaced with your username.",
+			"",
 			"* %gm here",
-			"Selects the current channel for daily messages."
+			"Selects the current channel for daily messages.",
 			"",
 			"* %gm nowhere",
 			"Disables daily messages.",
