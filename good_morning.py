@@ -22,7 +22,7 @@ class GoodMorning:
 		GoodMorning.read_file_daily_channel()
 		GoodMorning.read_file_user_phrase()
 
-	async def check_good_morning(search_guild=None):
+	async def check_good_morning(search_guild=None, search_user=None):
 		global last_sent
 
 		now = datetime.today()
@@ -37,6 +37,9 @@ class GoodMorning:
 				guild_id, user_id = key.split("-")
 
 				if search_guild != None and str(search_guild.id) != guild_id:
+					continue
+				
+				if search_user != None and str(search_user.id) != user_id:
 					continue
 
 				if guild_id in daily_channel.keys():
@@ -235,7 +238,7 @@ class GoodMorning:
 		global user_phrase
 
 		try:
-			with open(FILE_USER_PHRASE, 'r') as f:
+			with open(FILE_USER_PHRASE, 'r', encoding="utf8") as f:
 				strings = f.read().split("\n")
 
 				for string in strings:
@@ -254,7 +257,7 @@ class GoodMorning:
 		except:
 			pass
 
-		with open(FILE_USER_PHRASE, 'w') as f:
+		with open(FILE_USER_PHRASE, 'w', encoding="utf8") as f:
 			strings = [f"{key} {value}" for key, value in user_phrase.items()]
 
 			f.write("\n".join(strings))

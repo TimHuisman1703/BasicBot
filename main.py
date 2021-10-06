@@ -90,7 +90,7 @@ async def on_member_update(before, after):
 	if str(before.status) != "online":
 		if str(after.status) == "online":
 			print(f"{after.name} is now online")
-			await GoodMorning.check_good_morning(after.guild)
+			await GoodMorning.check_good_morning(after.guild, after)
 	
 	await EmojiManager.delete_outdated_emojis()
 
