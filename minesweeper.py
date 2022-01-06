@@ -1,13 +1,12 @@
 import random
-import time
 import re
 
-import asyncio
+import discord
 
-TILE_CHARACTERS = "🅾 🟦 1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣".split()
+TILE_CHARACTERS = "🅱️ 🟦 1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣".split()
 
 class Minesweeper:
-	async def process(message):
+	async def process(message: discord.Message):
 		width = height = 10
 		bomb_ratio = 0.15
 
@@ -45,7 +44,7 @@ class Minesweeper:
 
 		await Minesweeper.create_message(message.channel, grid)
 	
-	def generate(width, height, bombs):
+	def generate(width: int, height: int, bombs: int) -> "list[list[int]]":
 		removing = bombs * 2 > width * height
 
 		# -1:	Bomb
@@ -82,16 +81,16 @@ class Minesweeper:
 		
 		return grid
 	
-	async def create_message(channel, grid):
+	async def create_message(channel: discord.abc.Messageable, grid: "list[list[int]]"):
 		bombs = sum(sum(int(tile == -1) for tile in row) for row in grid)
 		await channel.send(f"Generating field... ({len(grid[0])}x{len(grid)}, {bombs} bomb"
-			+ "s"*int(bombs != 1) + ")\n" + ("🟫 ​"*(len(grid[0]) + 2))[:-1])
+			+ "s"*int(bombs != 1) + ")\n" + ("⬜ "*(len(grid[0]) + 2))[:-1])
 
 		for iy in range(len(grid)):
-			await channel.send("🟫 " + " ".join(f"||{TILE_CHARACTERS[tile+1]}||" for tile in grid[iy]) + " 🟫")
-		await channel.send(("🟫 ​"*(len(grid[0]) + 2))[:-1])
+			await channel.send("⬜ " + " ".join(f"||{TILE_CHARACTERS[tile+1]}||" for tile in grid[iy]) + " ⬜")
+		await channel.send(("⬜ ​"*(len(grid[0]) + 2))[:-1])
 	
-	async def send_help_message(channel):
+	async def send_help_message(channel: discord.abc.Messageable):
 		strings = [
 			"= Minesweeper =",
 			"",

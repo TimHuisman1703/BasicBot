@@ -134,7 +134,7 @@ class SentenceGenerator:
 		start_words = []
 		for i in range(len(words)):
 			if words[i] not in follow_up.keys():
-				follow_up.update({words[i]: []})
+				follow_up[words[i]] = []
 			if i < len(words) - 1:
 				follow_up[words[i]] += [words[i+1]]
 				if words[i][-1] == ".":

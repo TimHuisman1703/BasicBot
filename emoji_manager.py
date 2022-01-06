@@ -13,12 +13,12 @@ FILE_TEMP_EMOJIS = DIRECTORY + "/data/database/em_temp_emojis.txt"
 temp_emojis = dict()
 
 class EmojiManager:
-	def startup(client):
+	def startup(client: discord.Client):
 		EmojiManager.read_file_temp_emojis()
 
 		EmojiManager.client = client
 
-	async def process(message):
+	async def process(message: discord.Message):
 		args = message.content.split()[1:]
 
 		channel = message.channel
@@ -40,7 +40,7 @@ class EmojiManager:
 			await EmojiManager.manually_delete_emoji(message)
 			return
 	
-	async def add_emoji(message, temp):
+	async def add_emoji(message: discord.Message, temp: bool):
 		args = message.content.split()[1:]
 		guild = message.guild
 		channel = message.channel
@@ -104,10 +104,10 @@ class EmojiManager:
 			tomorrow = datetime.datetime.today() + datetime.timedelta(days=1)
 			tomorrow = tomorrow.strftime("%Y/%m/%d-%H:%M:%S")
 
-			temp_emojis.update({f"{emoji.id}": tomorrow})
+			temp_emojis[f"{emoji.id}"] = tomorrow
 			await EmojiManager.write_file_temp_emojis()
 	
-	async def manually_delete_emoji(message):
+	async def manually_delete_emoji(message: discord.Message):
 		args = message.content.split()[1:]
 		guild = message.guild
 		channel = message.channel
@@ -167,7 +167,7 @@ class EmojiManager:
 
 				for string in strings:
 					key, value = string.split()
-					temp_emojis.update({key: value})
+					temp_emojis[key] = value
 
 				f.close()
 		except:
@@ -187,7 +187,7 @@ class EmojiManager:
 			f.write("\n".join(strings))
 			f.close()
 	
-	async def send_help_message(channel):
+	async def send_help_message(channel: discord.abc.Messageable):
 		strings = [
 			"= DM Handler =",
 			"",

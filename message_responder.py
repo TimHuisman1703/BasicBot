@@ -1,5 +1,7 @@
 import random
 
+import discord
+
 SPIDER_KEYWORDS = [
 	"spider",
 	"spidur",
@@ -17,22 +19,22 @@ SPIDER_RESPONSES = [
 	"DIIIIIIIIEEEEEEEE!!!!!!!!"
 ]
 
-class RegularMessage:
-	async def process(message):
+class MessageResponder:
+	async def process(message: discord.Message):
 		text = message.content.lower()
 
 		for word in SPIDER_KEYWORDS:
 			if word in text:
-				await RegularMessage.send_spider_message(message)
+				await MessageResponder.send_spider_message(message)
 				break
 	
-	async def send_spider_message(message):
+	async def send_spider_message(message: discord.Message):
 		channel = message.channel
 		response = rand_list(SPIDER_RESPONSES)
 
 		await channel.send(response)
 
-def rand_list(l):
+def rand_list(l: list):
 	return l[random.randint(0, len(l)-1)]
 
 if __name__ == "__main__":

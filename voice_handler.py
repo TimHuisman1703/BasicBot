@@ -9,7 +9,7 @@ SOUND_NAMES = []
 SOUNDS = {}
 
 class VoiceHandler:
-	async def startup(client):
+	async def startup(client: discord.Client):
 		await VoiceHandler.load_list()
 		
 		VoiceHandler.client = client
@@ -25,68 +25,59 @@ class VoiceHandler:
 				sound = await discord.FFmpegOpusAudio.from_probe(f"data/sounds/{name}.mp3")
 
 				SOUND_NAMES += [name]
-				SOUNDS.update({name: sound})
+				SOUNDS[name] = sound
 
-	async def process(message):
+	async def process(message: discord.Message):
 		args = message.content.split()[1:]
 
 		if len(args) == 0:
 			await VoiceHandler.send_help_message(message.channel)
-			return
-		
-		if args[0].lower() in ["help", "?"]:
+		elif args[0].lower() in ["help", "?"]:
 			await VoiceHandler.send_help_message(message.channel)
-			return
-		if args[0].lower() in ["join", "connect"]:
+		elif args[0].lower() in ["join", "connect"]:
 			await VoiceHandler.join_user_voice_channel(message)
-
 			voice_client = discord.utils.get(VoiceHandler.client.voice_clients, guild=message.guild)
 			await VoiceHandler.play_sfx("hello", voice_client)
-			return
-		if args[0].lower() in ["leave", "disconnect"]:
+		elif args[0].lower() in ["leave", "disconnect"]:
 			await VoiceHandler.leave_voice_channel(message)
-			return
-		if args[0].lower() in ["play"]:
+		elif args[0].lower() in ["play"]:
 			await VoiceHandler.start_playing_sfx(message)
-			return
-		if args[0].lower() in ["stop", "shut", "stfu"]:
+		elif args[0].lower() in ["stop", "shut", "stfu"]:
 			voice_client = discord.utils.get(VoiceHandler.client.voice_clients, guild=message.guild)
 			voice_client.stop()
-			return
-		if args[0].lower() in ["list", "sounds", "sfx"]:
+		elif args[0].lower() in ["list", "sounds", "sfx"]:
 			await VoiceHandler.create_sounds_list_message(message.channel)
-			return
 	
-	async def get_voice_channel(message):
-			user = message.author
-			voice_state = user.voice
+	async def get_voice_channel(message: discord.Message):
+		user = message.author
+		voice_state = user.voice
 
-			if voice_state == None:
-				return None
-			
-			return voice_state.channel
+		if voice_state == None:
+			return None
+		
+		return voice_state.channel
 	
-	async def join_user_voice_channel(message):
+	async def join_user_voice_channel(message: discord.Message):
 		try:
 			channel = await VoiceHandler.get_voice_channel(message)
 			await channel.connect()
 		except:
 			pass
 	
-	async def leave_voice_channel(message):
+	async def leave_voice_channel(message: discord.Message):
 		try:
 			await message.guild.voice_client.disconnect()
 		except:
 			pass
 	
-	async def play_sfx(name, voice_client):
+	async def play_sfx(name: str, voice_client: discord.VoiceClient):
 		if name in SOUND_NAMES:
 			voice_client.play(SOUNDS[name])
 
 			sound = await discord.FFmpegOpusAudio.from_probe(f"data/sounds/{name}.mp3")
-			SOUNDS.update({name: sound})
+			SOUNDS[name] = sound
 	
-	async def start_playing_sfx(message):
+	async def start_playing_sfx(message: discord.Message):
 		args = message.content.split()[1:]
 
 		try:
@@ -102,7 +93,7 @@ class VoiceHandler:
 		except:
 			pass
 	
-	async def create_sounds_list_message(channel):
+	async def create_sounds_list_message(channel: discord.abc.Messageable):
 		await VoiceHandler.load_list()
 
 		strings = [
@@ -113,7 +104,7 @@ class VoiceHandler:
 
 		await channel.send("```md\n" + "\n".join(strings) + "```")
 	
-	async def send_help_message(channel):
+	async def send_help_message(channel: discord.abc.Messageable):
 		strings = [
 			"= Voice Channel =",
 			"",
