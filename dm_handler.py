@@ -1,7 +1,7 @@
 import os
-from dotenv import load_dotenv
 
 import discord
+from dotenv import load_dotenv
 
 load_dotenv()
 AUTHOR_ID = int(os.getenv("AUTHOR_ID"))

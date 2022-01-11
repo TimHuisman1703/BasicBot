@@ -1,9 +1,9 @@
 import os
 import random
 
+import codecs
 from io import TextIOWrapper
 import requests, html
-import codecs
 
 MAX_ARTICLES = 50
 
