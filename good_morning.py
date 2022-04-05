@@ -64,8 +64,9 @@ class GoodMorning:
 
 					last_sent[key] = today
 					if key not in event_log:
-						event_log[key] = []
-					event_log[key].append(now)
+						event_log[key] = {}
+					day = now.strftime("%Y %m %d")
+					event_log[key][day] = now
 		
 		await GoodMorning.write_file_last_sent()
 		await GoodMorning.write_file_event_log()
@@ -291,10 +292,11 @@ class GoodMorning:
 					args = string.split("\n")
 					key = args[0]
 
-					event_log[key] = []
+					event_log[key] = {}
 					for value in args[1:]:
 						time = datetime(*[int(j) for j in value.split()])
-						event_log[key].append(time)
+						day = time.strftime("%Y %m %d")
+						event_log[key][day] = time
 
 				f.close()
 		except:
@@ -312,7 +314,7 @@ class GoodMorning:
 			strings = []
 			for key in event_log:
 				string = key
-				for time in event_log[key]:
+				for time in event_log[key].values():
 					string += "\n" + time.strftime("%Y %m %d %H %M %S")
 				strings.append(string)
 

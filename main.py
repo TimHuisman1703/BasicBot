@@ -1,7 +1,6 @@
-import os
-
 import discord
 from dotenv import load_dotenv
+import os
 
 from activity_handler import ActivityHandler
 from dm_handler import DMHandler
@@ -82,11 +81,16 @@ async def on_message(message: discord.Message):
 	
 	busy.remove(message.channel.id)
 
+saying_good_morning = set()
+
 @client.event
 async def on_member_update(before: discord.Member, after: discord.Member):
-	if str(before.status) != "online":
-		if str(after.status) == "online":
-			await GoodMorning.check_good_morning(after.guild, after)
+	if str(before.status) not in ["online", "idle"]:
+		if str(after.status) in ["online", "idle"]:
+			if after.guild not in saying_good_morning:
+				saying_good_morning.add(after.guild)
+				await GoodMorning.check_good_morning(after.guild, after)
+				saying_good_morning.remove(after.guild)
 	
 	await EmojiManager.delete_outdated_emojis()
 

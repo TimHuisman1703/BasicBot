@@ -10,8 +10,6 @@ SOUNDS = {}
 
 class VoiceHandler:
 	async def startup(client: discord.Client):
-		await VoiceHandler.load_list()
-		
 		VoiceHandler.client = client
 	
 	async def load_list():
@@ -29,6 +27,9 @@ class VoiceHandler:
 
 	async def process(message: discord.Message):
 		args = message.content.split()[1:]
+
+		if not SOUND_NAMES:
+			await VoiceHandler.load_list()
 
 		if len(args) == 0:
 			await VoiceHandler.send_help_message(message.channel)
