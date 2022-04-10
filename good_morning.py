@@ -182,11 +182,11 @@ class GoodMorning:
 			string += f"\n- Times woken up:         {total}"
 
 			if total:
-				average = sum(3600 * t.hour + 60 * t.minute + t.second for t in event_log[key]) // total
+				average = sum(3600 * t.hour + 60 * t.minute + t.second for t in event_log[key].values()) // total
 				h, m, s = average // 3600, average // 60 % 60, average % 60
 				string += f"\n- Usually wakes up at:    {h:02}:{m:02}:{s:02}"
 
-				dates = sorted(event_log[key], key=lambda x: 3600 * x.hour + 60 * x.minute + x.second)
+				dates = sorted(event_log[key].values(), key=lambda x: 3600 * x.hour + 60 * x.minute + x.second)
 				string += f"\n- Earliest wake-up time:  " + dates[0].strftime("%H:%M:%S on %d-%m-%Y")
 				string += f"\n- Latest wake-up time:    " + dates[-1].strftime("%H:%M:%S on %d-%m-%Y")
 		else:
