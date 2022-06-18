@@ -33,13 +33,18 @@ class DailyActivities:
         end = html.index("\"", start + 1)
         page_amount = int(html[start + 17:end])
 
-        page_nr = random.randint(1, page_amount)
+        while 1:
+            try:
+                page_nr = random.randint(1, page_amount)
 
-        file = open(FILE_XKCD_CHANNEL)
-        for channel_id in file.read().strip().split("\n"):
-            channel = await client.fetch_channel(int(channel_id))
-            await channel.send(f"https://xkcd.com/{page_nr}/")
-        file.close()
+                file = open(FILE_XKCD_CHANNEL)
+                for channel_id in file.read().strip().split("\n"):
+                    channel = await client.fetch_channel(int(channel_id))
+                    await channel.send(f"https://xkcd.com/{page_nr}/")
+                file.close()
+            except:
+                continue
+            break
 
 if __name__ == "__main__":
     print("You did it again, dummy!")
